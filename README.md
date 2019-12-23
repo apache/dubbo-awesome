@@ -8,9 +8,7 @@ Video playing address:
 
  
 
-| slides/meetup    | Video address                                                |
-| ---------------- | -------------------------------------------------- |
-| meetup           | Video address                                      |
+| slides/meetup    | Video address                                      |
 | ---------------- | -------------------------------------------------- |
 | 201910@chengdu   | https://developer.aliyun.com/live/1522             |
 | 201908@shanghai  | https://developer.aliyun.com/live/1280             |
