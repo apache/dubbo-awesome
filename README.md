@@ -6,9 +6,9 @@ Collections of Apache dubbo relevant informations
 
 Video playing address:
 
-slides/meetup 
+ 
 
-| meetup           | Video address                                                |
+| slides/meetup    | Video address                                                |
 | ---------------- | -------------------------------------------------- |
 | 201805@Beijing   | http://www.itdks.com/index.php/Act/apply_upgrade/id/2176/mUid/0.html#dingbu |
 | 201806@Shanghai  | http://www.itdks.com/index.php/Act/apply_upgrade/id/2281/mUid/0.html#dingbu |
