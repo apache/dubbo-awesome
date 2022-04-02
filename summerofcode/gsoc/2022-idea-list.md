@@ -1,6 +1,6 @@
 # 报名须知
 * 请务必详细阅读指引：https://community.apache.org/gsoc.html#prospective-asf-mentors-read-this
-* 请务必在感兴趣的项目 Github Issue 下方留言。
+* 请务必在感兴趣的 Project 的 Issue 下方留言。
 * Google 官方报名地址：https://summerofcode.withgoogle.com/
 
 
