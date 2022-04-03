@@ -4,25 +4,25 @@
 * Google 官方报名地址：https://summerofcode.withgoogle.com/
 
 
-## 可观测性
+## 题目一：可观测性
 * Related proposal https://github.com/apache/dubbo-awesome/blob/master/proposals/D4-observability.md
 * Project links of different languages:
   * Java https://github.com/apache/dubbo/issues/9886
   * Golang 
-## Proxyless Mesh  
+## 题目二：Proxyless Mesh  
 * Related proposal https://github.com/apache/dubbo-awesome/blob/master/proposals/D3.2-proxyless-mesh.md
 * Project links of different languages:
   * Java https://github.com/apache/dubbo/issues/9884
   * Golang 
-## Proxy Mesh - Thin SDK
+## 题目三：Proxy Mesh - Thin SDK
 * Related proposal https://github.com/apache/dubbo-awesome/blob/master/proposals/D3.1-thinsdk-sidecar-mesh.md
 * Project links of different languages:
   * Java https://github.com/apache/dubbo/issues/9885
   * Golang 
-## admin api 迁移 qos 去中心化管控
+## 题目四：admin api 迁移 qos 去中心化管控
 
-## 服务治理场景化用例设计
-Project link(https://github.com/apache/dubbo/issues/9887)    
+## 题目五：服务治理场景化用例设计
+* Related project link(https://github.com/apache/dubbo/issues/9887)    
 
 **任务描述**  
 Dubbo 拥有丰富的治理规则，如服务发现、负载均衡、路由策略（标签路由、条件路由）等，但是这些治理规则的使用具有一定的难度，用户也很难直观的了解到其对应的使用场景。因此 Dubbo 期望有这样的一些场景化的用例能够体现 Dubbo 的治理能力，帮助用户将治理规则迁移到真实业务场景中使用。
@@ -31,3 +31,7 @@ Dubbo 拥有丰富的治理规则，如服务发现、负载均衡、路由策�
 
 **参考：**  
 Istio 中 bookinfo 应用
+
+## 题目六：rust 多语言实现
+* Related issue: 
+* 总体目标：为 Dubbo3 提供 rust 多语言实现
