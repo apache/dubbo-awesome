@@ -35,3 +35,14 @@ Istio 中 bookinfo 应用
 ## 题目六：rust 多语言实现
 * Related issue: 
 * 总体目标：为 Dubbo3 提供 rust 多语言实现
+
+## 题目七：python3 多语言实现
+
+* Related issue: 
+* 总体目标：为 Dubbo3 提供 python3 多语言实现
+
+## 题目八：Dubbo、Triple协议的抓包解析工具
+
+* Related issue: 
+* 总体目标：为了方便Dubbo的用户排查问题，为Dubbo社区提供解析Dubbo、Triple协议的工具。目前比较流行的抓包工具有wireshark等，但是Wireshark的开源许可证是GPL2，与Apache 2.0不兼容，因此我们需要实现解析Dubbo自身协议的工具。
+
