@@ -21,7 +21,7 @@
 本地聚合开启方式:  
 ```xml
 <dubbo:metrics>
-    <dubbo:aggregation enable="true" />
+    <dubbo:aggregation enabled="true" />
 </dubbo:metrics>
 ```
 
@@ -41,33 +41,34 @@
 
 ### 指标聚合
 其中指标聚合大部分需要通过滑动窗口计算，此处先介绍采用的滑动窗口算法
-### 滑动窗口
+
+**滑动窗口**
 此处滑动窗口以Prometheus JavaClient的TimeWindowQuantiles为例  
 假设我们初始有6个bucket，每个窗口时间设置为2分钟  
 每次写入指标数据时，我们会将数据分别写入6个bucket内。每隔两分钟移动一个bucket并且清除原来bucket内的数据。 
 读取指标时，我们读取当前current指向的bucket，以达到滑动窗口的效果。  
 具体如下图所示。  
-![observability](../images/observability2.png)
+![observability](../images/observability-2.png)
 
 
 在每个bucket内，我们计算分位数指标时也有3种常用算法可选用
-1、TDigest（极端分位精确度高，如p1 p99，中间分位精确度低，如p50。推荐使用该方式）
-    1.1、https://op8867555.github.io/posts/2018-04-09-tdigest.html
-1.2、https://blog.csdn.net/csdnnews/article/details/116246540
-1.3、开源实现：https://github.com/tdunning/t-digest
-2、HdrHistogram（精确度低）
-2.1、https://caorong.github.io/2016/07/31/hdrhistogram/
-2.2、开源实现：https://github.com/HdrHistogram/HdrHistogram
-3、CKMS（允许一定错误率，由用户自己设置，Prometheus的TimeWindowQuantiles内部使用了该算法。资料偏少，大致看看即可）
-3.1、https://caorong.github.io/2020/08/03/quartile-%20algorithm/
-3.2、https://www.stevenengelhardt.com/2018/03/29/calculating-percentiles-on-streaming-data-part-7-cormode-korn-muthukrishnan-srivastava/
-3.3、http://dimacs.rutgers.edu/~graham/pubs/papers/bquant-icde.pdf  
+* TDigest（极端分位精确度高，如p1 p99，中间分位精确度低，如p50。推荐使用该方式）
+    * https://op8867555.github.io/posts/2018-04-09-tdigest.html
+    * https://blog.csdn.net/csdnnews/article/details/116246540
+    * 开源实现：https://github.com/tdunning/t-digest
+* HdrHistogram（精确度低）
+    * https://caorong.github.io/2016/07/31/hdrhistogram/
+    * 开源实现：https://github.com/HdrHistogram/HdrHistogram
+* CKMS（允许一定错误率，由用户自己设置，Prometheus的TimeWindowQuantiles内部使用了该算法。资料偏少，大致看看即可）
+    * https://caorong.github.io/2020/08/03/quartile-%20algorithm/
+    * https://www.stevenengelhardt.com/2018/03/29/calculating-percentiles-on-streaming-data-part-7-cormode-korn-muthukrishnan-srivastava/
+    * http://dimacs.rutgers.edu/~graham/pubs/papers/bquant-icde.pdf  
 
 **参数设计**  
 指标聚合参数：
 ```xml
 <dubbo:metrics>
-    <dubbo:aggregation enable="true" bucket-num="5" time-window-seconds="10"/>
+    <dubbo:aggregation enabled="true" bucket-num="5" time-window-seconds="10"/>
 </dubbo:metrics>
 ```
 
@@ -84,7 +85,7 @@
 * 处理中请求数: 前后增加Filter简单统计即可
 *（补充中。。。）
 
-**指标接口**  
+### 指标接口
 指标接口将提供一个类似于MetadataService的MetricsService，该Service不仅提供柔性服务所需的接口级数据，也提供所有指标的查询方式。  
 其中方法级指标的查询的接口可按如下方式声明
 
@@ -109,14 +110,22 @@ public class Quantile {
 
 ### 指标推送
 指标推送只有用户在设置了<dubbo:metrics />配置且配置protocol参数后才开启，若只开启指标聚合，则默认不推送指标。
-Promehteus Pull ServiceDiscovery
-● 使用dubbo-admin等类似的中间层，启动时根据配置将本机 IP、Port、MetricsURL 推送地址信息至dubbo-admin（或任意中间层）的方式，暴露HTTP ServiceDiscovery供prometheus读取，配置方式如<dubbo:metrics protocol="prometheus" mode="pull" address="${dubbo-admin.address}" port="20888" url="/metrics"/>，其中在pull模式下address为可选参数，若不填则需用户手动在Prometheus配置文件中配置地址
-○ 优点：稳定，并且能通过中间层移除已下线的应用，只保留存活应用供Prometheus读取
-○ 缺点：不够轻量，如果用户没有使用dubbo-admin则必须引入。如果用户自己实现了dubbo控制台则需提供类似http-sd-starter模块供集成，并且该模块需实现健康检查代码，检测已下线的dubbo应用并移除
-Prometheus Push Pushgateway
-● 用户直接在Dubbo配置文件中配置Prometheus Pushgateway的地址即可，如<dubbo:metrics protocol="prometheus" mode="push" address="${prometheus.pushgateway-url}" interval="5" />，其中interval代表推送间隔
-○ 优点：方便，用户只需要引入依赖，并加上这一行配置即可直接采集指标
-○ 缺点：Push方式Prometheus无法自动删除已下线的应用的指标，需要用户手动处理
+
+1、Promehteus Pull ServiceDiscovery
+* 使用dubbo-admin等类似的中间层，启动时根据配置将本机 IP、Port、MetricsURL 推送地址信息至dubbo-admin（或任意中间层）的方式，暴露HTTP ServiceDiscovery供prometheus读取，配置方式如<dubbo:metrics protocol="prometheus" mode="pull" address="${dubbo-admin.address}" port="20888" url="/metrics"/>，其中在pull模式下address为可选参数，若不填则需用户手动在Prometheus配置文件中配置地址
+    * 优点：稳定，并且能通过中间层移除已下线的应用，只保留存活应用供Prometheus读取
+    * 缺点：不够轻量，如果用户没有使用dubbo-admin则必须引入。如果用户自己实现了dubbo控制台则需提供类似http-sd-starter模块供集成，并且该模块需实现健康检查代码，检测已下线的dubbo应用并移除
+    * 
+2、Prometheus Push Pushgateway
+* 用户直接在Dubbo配置文件中配置Prometheus Pushgateway的地址即可，如<dubbo:metrics protocol="prometheus" mode="push" address="${prometheus.pushgateway-url}" interval="5" />，其中interval代表推送间隔
+    * 优点：方便，用户只需要引入依赖，并加上这一行配置即可直接采集指标
+    * 缺点：Push方式Prometheus无法自动删除已下线的应用的指标，需要用户手动处理
+
+### 集成测试
+由于 Dubbo 原有一套指标体系，在可观测行对接完成之后需要清除旧代码并且修改集成测试相关代码
+
+### 整合 Spring 配置
+目前国内大部分用户都是基于 Spring 整合 Dubbo 使用，为了更方便用户配置相关内容，需要完善配置自动补全部分，并且对接 SpringBoot 的 Actuator
 
 ### 整体结构设计
 1、移除原来与 Metrics 相关的类
