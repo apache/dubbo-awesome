@@ -50,3 +50,15 @@ Istio 中 bookinfo 应用
 
 * Related issue: 
 * 总体目标：Dubbo CLI将作为Dubbo的命令行工具，Dubbo应用进程的统一的运维操作组件。它可以对接Dubbo生态内的各类多语言SDK，并且能够用于安装Dubbo Admin、Dubbo Pixiu等组件。
+
+## 题目九：证书中心化管理滚动更新
+
+* Related issue: 
+* 总体目标：Dubbo CLI将作为Dubbo的命令行工具，Dubbo应用进程的统一的运维操作组件。它可以对接Dubbo生态内的各类多语言SDK，并且能够用于安装Dubbo Admin、Dubbo Pixiu等组件。
+
+## 题目九：API 模块化管理机制调研与实现
+
+* Related issue: 
+* 总体目标：在 Dubbo 版本迭代过程中，内部相互依赖的接口签名很容易被改动。但是这些仅 Dubbo 内部使用的 API 很多被用户误使用。为了更好地控制 Dubbo 对外暴露的 API 信息，Dubbo 希望将 API 分类为三种类型：暴露给用户开放使用的、内部 Dubbo 使用的、单元测试使用的。基于此在 Dubbo 编译的时候进行强制卡点，避免用户依赖内部使用的 API。
+
+参考：Guava 的 VisibleForTesting 和 kolin 的 OptIn、JDK9 中开始提供的 module 机制
