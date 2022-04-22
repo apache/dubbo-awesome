@@ -3,3 +3,12 @@ notifications:
     issues:       notifications@dubbo.apache.org
     pullrequests: notifications@dubbo.apache.org
     jira_options: link label link label
+github:
+  homepage: https://dubbo.apache.org/
+  features:
+    # Enable wiki for documentation
+    wiki: true
+    # Enable issue management
+    issues: true
+    # Enable projects for project management boards
+    projects: true
