@@ -15,3 +15,12 @@
 1. 在现有的逻辑内向MetadataService注入ServiceModel，让MetadataService的服务发现与正常的业务服务引用保持相同的逻辑，代价是引入的ReferenceConfigBase比较重，其中很多内容都不太需要用到。
 2. 抽象出一套内置服务的逻辑，不走ref config，用于内部的轻量级服务，改动量需要评估，可能会较大。
 3. 单独在triple解决这个依赖问题，但是这治标不治本，后续协议依然会踩坑。
+
+----
+
+
+
+会议纪要：
+
+1. ServiceModel和referenceConfig 解耦，来支持MetadataService的ServiceModel注入需求，避免引入重量级的ReferenceConfig
+2. Triple 协议的stub存储全局的信息，待优化。
