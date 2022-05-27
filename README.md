@@ -15,7 +15,7 @@ Apache Dubbo 社区每两周都会举办线上会议，讨论最新发布的特�
 | Asset | Link        |
 |:-----------|:------------|
 | 🔗 下次会议 | **钉钉会议:**
-| 🎥 会议回放 |
+| 🎥 会议回放 |[重点议题记录与回放资源](/weeklymeeting)
 
 ## [Proposals](/proposals)
 自 Dubbo3 开始，我们将 Dubbo 的核心特性的思考与设计沉淀成方案，包括应用级服务发现、Triple 协议、Mesh 等。
