@@ -21,18 +21,18 @@ Apache Dubbo 社区每两周都会举办线上会议，讨论最新发布的特�
 自 Dubbo3 开始，我们将 Dubbo 的核心特性的思考与设计沉淀成方案，包括应用级服务发现、Triple 协议、Mesh 等。
 
 ## Community Events And Resources
-[Dubbo3 企业实践分享]()
-[中间件峰会]()
-[InfoQ 全球开发者大会]()
-[ApacheCon Asia RPC Track]()
+* [Dubbo3 企业实践分享]()
+* [中间件峰会]()
+* [InfoQ 全球开发者大会]()
+* [ApacheCon Asia RPC Track]()
 
 ## Tasks - Gets Involved In Community
-[Dubbo3 文档建设]()
+* [Dubbo3 文档建设]()
 
-[Dubbo3 多语言 - Golang sdk]()
-[Dubbo3 多语言 - Java sdk]()
-[Dubbo3 多语言 - Rust sdk]()
-[Dubbo3 多语言 - Javascript sdk]()
-[Dubbo3 多语言 - C/C++ sdk]()
-[Dubbo3 多语言 - Python3 sdk]()
-[Dubbo3 多语言 - C# sdk]()
+* [Dubbo3 多语言 - Golang sdk]()
+* [Dubbo3 多语言 - Java sdk]()
+* [Dubbo3 多语言 - Rust sdk]()
+* [Dubbo3 多语言 - Javascript sdk]()
+* [Dubbo3 多语言 - C/C++ sdk]()
+* [Dubbo3 多语言 - Python3 sdk]()
+* [Dubbo3 多语言 - C# sdk]()
