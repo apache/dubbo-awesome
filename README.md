@@ -35,4 +35,4 @@ Apache Dubbo 社区每两周都会举办线上会议，讨论最新发布的特�
 [Dubbo3 多语言 - Javascript sdk]()
 [Dubbo3 多语言 - C/C++ sdk]()
 [Dubbo3 多语言 - Python3 sdk]()
-[Dubbo3 多语言 - Python3 sdk]()
+[Dubbo3 多语言 - C# sdk]()
