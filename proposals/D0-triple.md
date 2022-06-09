@@ -34,7 +34,7 @@ Body 协议体中的一些 RPC 请求定位符如 Service Name、Method Name、V
 - 协议结构： 定义包含字段列表和各字段语义以及不同字段的排列方式
 - 协议通过定义规则、格式和语义来约定数据如何在网络间传输。一次成功的 RPC 需要通信的两端都能够按照协议约定进行网络字节流的读写和对象转换。如果两端对使用的协议不能达成一致，就会出现鸡同鸭讲，无法满足远程通信的需求。
 
-![协议选择](/imgs/v3/concepts/triple-protocol.png)
+![协议选择](../protocol/triple-protocol.png)
 
 RPC 协议的设计需要考虑以下内容：
 - 通用性： 统一的二进制格式，跨语言、跨平台、多传输层协议支持
@@ -85,7 +85,7 @@ gRPC 的优势由HTTP2 和 Protobuf 继承而来。
 
 ### Triple 协议定义
 
-![Triple 协议通信方式](/imgs/v3/concepts/triple.png)
+![Triple 协议通信方式](../protocol/triple.png)
 
 - 现状
 
