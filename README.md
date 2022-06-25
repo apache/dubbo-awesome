@@ -14,25 +14,22 @@ Apache Dubbo 社区每两周都会举办线上会议，讨论最新发布的特�
 
 | Asset | Link        |
 |:-----------|:------------|
-| 🔗 下次会议 | **钉钉会议:**
-| 🎥 会议回放 |[重点议题记录与回放资源](/weeklymeeting)
+| 🔗 下次会议 | **钉钉会议:** 
+| 🎥 会议回放 |[2022-06-24](https://github.com/apache/dubbo-awesome/issues/76)
 
 ## [Proposals](/proposals)
 自 Dubbo3 开始，我们将 Dubbo 的核心特性的思考与设计沉淀成方案，包括应用级服务发现、Triple 协议、Mesh 等。
 
 ## Community Events And Resources
-* [Dubbo3 企业实践分享]()
-* [中间件峰会]()
-* [InfoQ 全球开发者大会]()
-* [ApacheCon Asia RPC Track]()
+* [2022 阿里中间件开发者大会](https://developer.aliyun.com/topic/middleware/developer/summit)
 
 ## Tasks - Gets Involved In Community
 * [Dubbo3 文档建设]()
 
-* [Dubbo3 多语言 - Golang sdk]()
-* [Dubbo3 多语言 - Java sdk]()
-* [Dubbo3 多语言 - Rust sdk]()
-* [Dubbo3 多语言 - Javascript sdk]()
-* [Dubbo3 多语言 - C/C++ sdk]()
-* [Dubbo3 多语言 - Python3 sdk]()
-* [Dubbo3 多语言 - C# sdk]()
+* [Dubbo3 多语言 - Golang sdk](https://github.com/apache/dubbo-go)
+* [Dubbo3 多语言 - Java sdk](https://github.com/apache/dubbo)
+* [Dubbo3 多语言 - Rust sdk](https://github.com/apache/dubbo-rust)
+* Dubbo3 多语言 - Node sdk
+* Dubbo3 多语言 - C/C++ sdk
+* Dubbo3 多语言 - Python3 sdk
+* Dubbo3 多语言 - C# sdk
