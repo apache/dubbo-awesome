@@ -51,28 +51,28 @@
 
 ## Proposal
 
-[app-principle](../images/discovery/app-principle.png)
+![app-principle](../images/discovery/app-principle.png)
 
 面对这个问题，在 Dubbo3 架构下，我们不得不重新思考两个问题：
 * 如何在保留易用性、功能性的同时，重新组织 URL 地址数据，避免冗余数据的出现，让 Dubbo3 能支撑更大规模集群水平扩容？
 * 如何在地址发现层面与其他的微服务体系如 Kubernetes、Spring Cloud 打通？
 
-[app-data1](../images/discovery/app-data1.png)
+![app-data1](../images/discovery/app-data1.png)
 
 Dubbo3 的应用级服务发现方案设计本质上就是围绕以上两个问题展开。其基本思路是：地址发现链路上的聚合元素也就是我们之前提到的 Key 由服务调整为应用，这也是其名称叫做应用级服务发现的由来；另外，通过注册中心同步的数据内容上做了大幅精简，只保留最核心的 ip、port 地址数据。
 
-[app-data2](../images/discovery/app-data2.png)
+![app-data2](../images/discovery/app-data2.png)
 
 这是升级之后应用级地址发现的内部数据结构进行详细分析。
 对比之前接口级的地址发现模型，我们主要关注橙色部分的变化。首先，在 provider 实例这一侧，相比于之前每个 RPC Service 注册一条地址数据，一个 provider 实例只会注册一条地址到注册中心；而在注册中心这一侧，地址以应用名为粒度做聚合，应用名节点下是精简过后的 provider 实例地址；
 
-[app-metadataservice](../images/discovery/app-metadataservice.png)
+![app-metadataservice](../images/discovery/app-metadataservice.png)
 
 应用级服务发现的上述调整，同时实现了地址单条数据大小和总数量的下降，但同时也带来了新的挑战：我们之前 Dubbo2 强调的易用性和功能性的基础损失了，因为元数据的传输被精简掉了，如何精细的控制单个服务的行为变得无法实现。
 
 针对这个问题，Dubbo3 的解法是引入一个内置的 MetadataService 元数据服务，由中心化推送转为 Consumer 到 Provider 的点对点拉取，在这个模式下，元数据传输的数据量将不在是一个问题，因此可以在元数据中扩展出更多的参数、暴露更多的治理数据。
 
-[app-metadataservice](../images/discovery/app-workflow.png)
+![app-metadataservice](../images/discovery/app-workflow.png)
 
 这里我们个重点看消费端 Consumer 的地址订阅行为，消费端从分两步读取地址数据，首先是从注册中心收到精简后的地址，随后通过调用 MetadataService 元数据服务，读取对端的元数据信息。在收到这两部分数据之后，消费端会完成地址数据的聚合，最终在运行态还原出类似 Dubbo2 的 URL 地址格式。因此从最终结果而言，应用级地址模型同时兼顾了地址传输层面的性能与运行层面的功能性。
 
