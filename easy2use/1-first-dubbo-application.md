@@ -135,232 +135,75 @@ public class TestController {
 ```
 
 ## 流式调用示例
-流式调用时需要在api模块依赖protobuf相关的maven插件，可以参考[官方示例](https://github.com/apache/dubbo-samples/tree/master/dubbo-samples-triple) 。
-### maven插件
-下面部分代码仅做参考。
-```xml
-<properties>
-    <compiler.version>0.0.4.1</compiler.version>
-    <source.level>1.8</source.level>
-    <target.level>1.8</target.level>
-    <maven-compiler-plugin.version>3.10.1</maven-compiler-plugin.version>
-    <protoc.version>3.19.4</protoc.version>
-    <grpc.version>1.44.1</grpc.version>
-</properties>
+### 接口定义
+```java
+import org.apache.dubbo.common.stream.StreamObserver;
 
-<build>
-    <extensions>
-      <extension>
-        <groupId>kr.motd.maven</groupId>
-        <artifactId>os-maven-plugin</artifactId>
-        <version>1.6.1</version>
-      </extension>
-    </extensions>
-    <plugins>
-      <plugin>
-        <groupId>org.xolstice.maven.plugins</groupId>
-        <artifactId>protobuf-maven-plugin</artifactId>
-        <version>0.6.1</version>
-        <configuration>
-          <protocArtifact>com.google.protobuf:protoc:${protoc.version}:exe:${os.detected.classifier}
-          </protocArtifact>
-          <pluginId>grpc-java</pluginId>
-          <pluginArtifact>io.grpc:protoc-gen-grpc-java:${grpc.version}:exe:${os.detected.classifier}
-          </pluginArtifact>
-          <protocPlugins>
-            <protocPlugin>
-              <id>dubbo</id>
-              <groupId>org.apache.dubbo</groupId>
-              <artifactId>dubbo-compiler</artifactId>
-              <version>${compiler.version}</version>
-              <mainClass>org.apache.dubbo.gen.tri.Dubbo3TripleGenerator</mainClass>
-            </protocPlugin>
-          </protocPlugins>
-        </configuration>
-        <executions>
-          <execution>
-            <goals>
-              <goal>compile</goal>
-              <goal>test-compile</goal>
-              <goal>compile-custom</goal>
-              <goal>test-compile-custom</goal>
-            </goals>
-          </execution>
-        </executions>
-      </plugin>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-compiler-plugin</artifactId>
-        <version>${maven-compiler-plugin.version}</version>
-        <configuration>
-          <source>${source.level}</source>
-          <target>${target.level}</target>
-        </configuration>
-      </plugin>
-    </plugins>
-  </build>
-```
-### proto定义
-```protobuf
-syntax = "proto3";
-
-option java_multiple_files = true;
-
-package org.apache.dubbo.sample.tri;
-
-
-// The request message containing the user's name.
-message GreeterRequest {
-string name = 1;
+public interface HelloService {
+    
+    void helloStream(String name, StreamObserver<String> replyStream);
 }
-
-// The response message containing the greetings
-message GreeterReply {
-string message = 1;
-}
-
-service Greeter{
-
-// serverStream
-rpc greetServerStream(GreeterRequest) returns (stream GreeterReply);
-
-}
-
 ```
 ### 服务端实现
-`GreeterImplBase`是使用maven插件生成的。
 ```java
-
 import org.apache.dubbo.common.stream.StreamObserver;
 import org.apache.dubbo.config.annotation.DubboService;
-import org.apache.dubbo.rpc.RpcContext;
-import org.apache.dubbo.rpc.protocol.tri.ServerStreamObserver;
-import org.apache.dubbo.sample.tri.DubboGreeterTriple.GreeterImplBase;
-import org.apache.dubbo.sample.tri.GreeterReply;
-import org.apache.dubbo.sample.tri.GreeterRequest;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import java.util.HashMap;
-import java.util.Map;
 
 @DubboService
-public class GreeterImpl extends GreeterImplBase {
-    private static final Logger LOGGER = LoggerFactory.getLogger(GreeterImpl.class);
-
-    private final String serverName;
-    public static final Map<String, Boolean> cancelResultMap = new HashMap<>();
-
-    public GreeterImpl() {
-        this.serverName = "default-server";
-    }
-
-    public GreeterImpl(String serverName) {
-        this.serverName = serverName;
-    }
-
-   
+public class HelloServiceImpl implements HelloService{
+    
     @Override
-    public void greetServerStream(GreeterRequest request,
-                                  StreamObserver<GreeterReply> replyStream) {
+    public void helloStream(String name, StreamObserver<String> replyStream) {
         for (int i = 0; i < 10; i++) {
-            replyStream.onNext(GreeterReply.newBuilder()
-                    .setMessage(request.getName() + "--" + i)
-                    .build());
+            replyStream.onNext(name +" -- " + i);
         }
         replyStream.onCompleted();
     }
 }
 ```
 ### 客户端调用
-客户端需要新增两个类`GrpcStreamObserverAdapter`和`StdoutStreamObserver`
 ```java
+import org.apache.dubbo.common.stream.StreamObserver;
+import org.apache.dubbo.config.annotation.DubboReference;
+
+import org.example.HelloService;
+import org.example.StdoutStreamObserver;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
 @RestController
 @RequestMapping("/test")
 public class TestController {
 
     @DubboReference
-    private Greeter greeter;
+    private HelloService helloService;
 
-        /**
+    /**
      * stream dubbo invoke
-     * TODO continue
-     * @return
      */
     @GetMapping("/stream")
-    public String stream(HttpServletResponse httpServletResponse) {
-        greeter.greetServerStream(GreeterRequest.newBuilder()
-                .setName("request")
-                .build(), new StdoutStreamObserver<>("stdoutStreamObserver"));
+    public String helloStream(String name, HttpServletResponse httpServletResponse) {
+        helloService.helloStream("Hello", new StreamObserver<String>() {
+            @Override
+            public void onNext(String data) {
+                LOGGER.info(data);
+            }
+
+            @Override
+            public void onError(Throwable throwable) {
+                LOGGER.error("error...");
+                throwable.printStackTrace();
+            }
+
+            @Override
+            public void onCompleted() {
+                LOGGER.info("completed...");
+            }
+        });
         return "success";
-    }
-}
-```
-```java
-
-import org.apache.dubbo.common.stream.StreamObserver;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-/**
- * @author earthchen
- * @date 2021/9/6
- **/
-public class StdoutStreamObserver<T> implements StreamObserver<T>, io.grpc.stub.StreamObserver<T> {
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(StdoutStreamObserver.class);
-
-    private final String name;
-
-    public StdoutStreamObserver(String name) {
-        this.name = name;
-    }
-
-    @Override
-    public void onNext(T data) {
-        LOGGER.info("{} stream <- reply:{}", name, data);
-    }
-
-    @Override
-    public void onError(Throwable throwable) {
-        LOGGER.error("{} stream onError", name, throwable);
-        throwable.printStackTrace();
-    }
-
-    @Override
-    public void onCompleted() {
-        LOGGER.info("{} stream completed", name);
-    }
-
-    public io.grpc.stub.StreamObserver<T> asGrpcObserver() {
-        return new GrpcStreamObserverAdapter<>(this);
-    }
-}
-```
-```java        
-import io.grpc.stub.StreamObserver;
-
-public class GrpcStreamObserverAdapter<T> implements StreamObserver<T> {
-
-    private final org.apache.dubbo.common.stream.StreamObserver<T> delegate;
-
-    public GrpcStreamObserverAdapter(org.apache.dubbo.common.stream.StreamObserver<T> delegate) {
-        this.delegate = delegate;
-    }
-
-    @Override
-    public void onNext(T data) {
-        delegate.onNext(data);
-    }
-
-    @Override
-    public void onError(Throwable throwable) {
-        delegate.onError(throwable);
-    }
-
-    @Override
-    public void onCompleted() {
-        delegate.onCompleted();
     }
 }
 ```
