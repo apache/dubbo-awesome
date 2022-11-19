@@ -3,12 +3,14 @@ name: Dubbo Benchmark
 on:
   workflow_dispatch:
   schedule:
-    - cron: '*/5 * * * *'
+    - cron: '33 * * * *'
 
 jobs:
   benchmark:
     runs-on: ubuntu-latest
     name: Run Benchmark and Report
+    permissions:
+      contents: write
     steps:
       - uses: actions/checkout@v2
       - name: Generate Report
