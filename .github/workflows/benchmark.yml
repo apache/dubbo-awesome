@@ -3,7 +3,7 @@ name: Dubbo Benchmark
 on:
   workflow_dispatch:
   schedule:
-    - cron: '*/2 * * * *'
+    - cron: '*/5 * * * *'
 
 jobs:
   benchmark:
