@@ -13,10 +13,10 @@ jobs:
     permissions:
       contents: write
     steps:
+      -uses: actions/checkout@v2
       - name: download output
         uses: actions/download-artifact@v2
       - name: Generate Report
-        uses: actions/checkout@v2
         run: |
           mkdir benchmark
           cp *-output/*.md benchmark/ && rm -rf *-output/*.md
