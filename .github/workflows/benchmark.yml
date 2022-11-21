@@ -1,0 +1,29 @@
+name: Dubbo Benchmark
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '* */6 * * *'
+
+jobs:
+  benchmark:
+    runs-on: ubuntu-latest
+    name: Run Benchmark and Report
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v2
+      - name: Generate Report
+        run: |
+          mkdir benchmark
+          filename=benchmark_$(date +%Y%m%d)_$(date +%H%M%S)
+          echo "# Benchmark Report" > benchmark/$filename.md
+      - name: Deploy
+        uses: peaceiris/actions-gh-pages@v3
+        if: github.ref == 'refs/heads/master'
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_branch: report/benchmark
+          publish_dir: ./benchmark
+          destination_dir: benchmark
+          keep_files: true
