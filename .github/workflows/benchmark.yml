@@ -8,8 +8,8 @@ on:
     - cron: '0 */6 * * *'
 
 jobs:
-  benchmark_report-upload:
-    needs: [benchmark-run]
+  benchmark-report-upload:
+    needs: [benchmark-report]
     runs-on: ubuntu-latest
     name: Run Benchmark and Report
     permissions:
