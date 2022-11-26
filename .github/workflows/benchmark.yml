@@ -55,9 +55,9 @@ jobs:
       - name: Wait server ready
         run: sleep 20
       - name: Run benchmark
-        run: ./benchmark.sh -a "--warmupIterations=1 --warmupTime=1 --measurementIterations=1 --measurementTime=1" ${{ matrix.target }}-client > ${{ matrix.target }}-output.txt
+        run: ./benchmark.sh -a "--warmupIterations=1 --warmupTime=1 --measurementIterations=1 --measurementTime=1" ${{ matrix.target }}-client > ${{ matrix.target }}-output-$(date +%Y%m%d)-$(date +%H).txt
       - name: Generate md file
-        run:  echo "\`\`\`java" >> ${{ matrix.target }}-output.md && cat ${{ matrix.target }}-output.txt >> ${{ matrix.target }}-output.md && echo "\`\`\`" >> ${{ matrix.target }}-output.md
+        run:  echo "\`\`\`java" >> ${{ matrix.target }}-output-$(date +%Y%m%d)-$(date +%H).md && cat ${{ matrix.target }}-output-$(date +%Y%m%d)-$(date +%H).txt >> ${{ matrix.target }}-output-$(date +%Y%m%d)-$(date +%H).md && echo "\`\`\`" >> ${{ matrix.target }}-output-$(date +%Y%m%d)-$(date +%H).md
       - name: Kill jobs
         run: jobs -p | grep -o -E '\s\d+\s' | xargs kill || true
       - name: Save output
