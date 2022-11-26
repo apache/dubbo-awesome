@@ -68,5 +68,5 @@ jobs:
       - name: Save output
         uses: actions/upload-artifact@v2
         with:
-          name: ${{ matrix.target }}_output*
-          path: ${{ matrix.target }}_output.md
+          name: ${{ matrix.target }}_output
+          path: ${{ matrix.target }}_output
