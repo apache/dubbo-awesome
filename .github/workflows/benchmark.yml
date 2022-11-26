@@ -55,13 +55,19 @@ jobs:
       - name: Wait server ready
         run: sleep 20
       - name: Run benchmark
-        run: ./benchmark.sh -a "--warmupIterations=1 --warmupTime=1 --measurementIterations=1 --measurementTime=1" ${{ matrix.target }}-client > ${{ matrix.target }}-output-$(date +%Y%m%d)-$(date +%H).txt
+        run: |
+          fileName=${{ matrix.target }}_output_$(date +%Y%m%d)_$(date +%H).txt
+          ./benchmark.sh -a "--warmupIterations=1 --warmupTime=1 --measurementIterations=1 --measurementTime=1" ${{ matrix.target }}-client > $fileName
       - name: Generate md file
-        run:  echo "\`\`\`java" >> ${{ matrix.target }}-output-$(date +%Y%m%d)-$(date +%H).md && cat ${{ matrix.target }}-output-$(date +%Y%m%d)-$(date +%H).txt >> ${{ matrix.target }}-output-$(date +%Y%m%d)-$(date +%H).md && echo "\`\`\`" >> ${{ matrix.target }}-output-$(date +%Y%m%d)-$(date +%H).md
+        run:  |
+          txtName=${{ matrix.target }}_output_$(date +%Y%m%d)_$(date +%H).txt
+          mdName=${{ matrix.target }}_output_$(date +%Y%m%d)_$(date +%H).md
+          echo "\`\`\`java" >> $mdName &&
+          cat $txtName >> $mdName && echo "\`\`\`" >> $mdName
       - name: Kill jobs
         run: jobs -p | grep -o -E '\s\d+\s' | xargs kill || true
       - name: Save output
         uses: actions/upload-artifact@v2
         with:
-          name: ${{ matrix.target }}-output
-          path: ${{ matrix.target }}-output.md
+          name: ${{ matrix.target }}_output
+          path: ${{ matrix.target }}_output_$(date +%Y%m%d)_$(date +%H).md
