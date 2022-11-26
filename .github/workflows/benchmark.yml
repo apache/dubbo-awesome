@@ -41,17 +41,13 @@ jobs:
     steps:
       - uses: actions/checkout@v2
         with:
-          repository: 'dkisser/dubbo-benchmark'
-          ref: website-benchmark-intergration
+          repository: 'apache/dubbo-benchmark'
+          ref: master
       - name: Set up JDK 8
         uses: actions/setup-java@v2
         with:
           java-version: '8'
           distribution: 'adopt'
-      - name: Set up Python 3.9
-        uses: actions/setup-python@v2
-        with:
-          python-version: 3.9.1
       - name: Prepare base
         run: mvn clean package -DskipTests=true -pl benchmark-base,client-base,server-base
       - name: Start server
@@ -61,7 +57,7 @@ jobs:
       - name: Run benchmark
         run: ./benchmark.sh -a "--warmupIterations=1 --warmupTime=1 --measurementIterations=1 --measurementTime=1" ${{ matrix.target }}-client > ${{ matrix.target }}-output.txt
       - name: Generate md file
-        run: cat ./benchmark-template.json | python3 -c "import sys, json; print (json.load(sys.stdin)['${{ matrix.target }}'])" >> ${{ matrix.target }}-output.md && echo "\`\`\`java" >> ${{ matrix.target }}-output.md && cat ${{ matrix.target }}-output.txt >> ${{ matrix.target }}-output.md && echo "\`\`\`" >> ${{ matrix.target }}-output.md
+        run:  echo "\`\`\`java" >> ${{ matrix.target }}-output.md && cat ${{ matrix.target }}-output.txt >> ${{ matrix.target }}-output.md && echo "\`\`\`" >> ${{ matrix.target }}-output.md
       - name: Kill jobs
         run: jobs -p | grep -o -E '\s\d+\s' | xargs kill || true
       - name: Save output
