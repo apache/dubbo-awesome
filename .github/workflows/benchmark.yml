@@ -21,7 +21,7 @@ jobs:
       - name: Generate Report
         run: |
           mkdir benchmark
-          cp *-output/*.md benchmark/ && rm -rf *-output/*.md
+          cp *_output/*.md benchmark/ && rm -rf *_output/*.md
       - name: Deploy
         uses: peaceiris/actions-gh-pages@v3
         #if: github.ref == 'refs/heads/master'
@@ -56,11 +56,11 @@ jobs:
         run: sleep 20
       - name: Run benchmark
         run: |
-          fileName=${{ matrix.target }}_output_$(date +%Y%m%d)_$(date +%H)
+          fileName=${{ matrix.target }}_output_$(date +%Y%m%d)
           ./benchmark.sh -a "--warmupIterations=1 --warmupTime=1 --measurementIterations=1 --measurementTime=1" ${{ matrix.target }}-client > $fileName.txt
       - name: Generate md file
         run:  |
-          fileName=${{ matrix.target }}_output_$(date +%Y%m%d)_$(date +%H)
+          fileName=${{ matrix.target }}_output_$(date +%Y%m%d)
           echo "\`\`\`java" >> $fileName.md &&
           cat $fileName.txt >> $fileName.md && echo "\`\`\`" >> $fileName.md
       - name: Kill jobs
@@ -69,4 +69,4 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: ${{ matrix.target }}_output
-          path: ${{ matrix.target }}_output_$(date +%Y%m%d)_$(date +%H).md
+          path: ${{ matrix.target }}_output_$(date +%Y%m%d).md
