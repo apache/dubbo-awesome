@@ -3,27 +3,69 @@ name: Dubbo Benchmark
 on:
   workflow_dispatch:
   schedule:
-    - cron: '* */6 * * *'
+    - cron: '0 */6 * * *'
 
 jobs:
-  benchmark:
+  benchmark-report-upload:
+    needs: [benchmark-report]
     runs-on: ubuntu-latest
     name: Run Benchmark and Report
     permissions:
       contents: write
     steps:
       - uses: actions/checkout@v2
+      - name: download output
+        uses: actions/download-artifact@v2
       - name: Generate Report
         run: |
-          mkdir benchmark
-          filename=benchmark_$(date +%Y%m%d)_$(date +%H%M%S)
-          echo "# Benchmark Report" > benchmark/$filename.md
+          dirname=$(date +%Y%m%d)_$(date +%H%M%S)
+          mkdir -p benchmark/$dirname
+          cp *_output/*.md benchmark/$dirname && rm -rf *_output/*.md
       - name: Deploy
         uses: peaceiris/actions-gh-pages@v3
-        if: github.ref == 'refs/heads/master'
+        #if: github.ref == 'refs/heads/master'
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_branch: report/benchmark
           publish_dir: ./benchmark
           destination_dir: benchmark
           keep_files: true
+
+  benchmark-report:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    strategy:
+      matrix:
+        target: [ "dubbo-fastjson","dubbo-gson","dubbo-grpc","dubbo-hessianlite","dubbo-kryo","dubbo-native-hessian","dubbo-protobuf-json","dubbo-triple" ]
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          repository: 'apache/dubbo-benchmark'
+          ref: master
+      - name: Set up JDK 8
+        uses: actions/setup-java@v2
+        with:
+          java-version: '8'
+          distribution: 'adopt'
+      - name: Prepare base
+        run: mvn clean package -DskipTests=true -pl benchmark-base,client-base,server-base
+      - name: Start server
+        run: ./benchmark.sh ${{ matrix.target }}-server &
+      - name: Wait server ready
+        run: sleep 20
+      - name: Run benchmark
+        run: |
+          fileName=${{ matrix.target }}_output
+          ./benchmark.sh -a "--warmupIterations=1 --warmupTime=1 --measurementIterations=1 --measurementTime=1" ${{ matrix.target }}-client > $fileName.txt
+      - name: Generate md file
+        run:  |
+          fileName=${{ matrix.target }}_output
+          echo "\`\`\`java" >> $fileName.md &&
+          cat $fileName.txt >> $fileName.md && echo "\`\`\`" >> $fileName.md
+      - name: Kill jobs
+        run: jobs -p | grep -o -E '\s\d+\s' | xargs kill || true
+      - name: Save output
+        uses: actions/upload-artifact@v2
+        with:
+          name: ${{ matrix.target }}_output
+          path: ${{ matrix.target }}_output.md
