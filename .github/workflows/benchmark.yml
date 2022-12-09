@@ -23,7 +23,7 @@ jobs:
           cp *_output/*.md benchmark/$dirname && rm -rf *_output/*.md
       - name: Deploy
         uses: peaceiris/actions-gh-pages@v3
-        #if: github.ref == 'refs/heads/master'
+        if: github.ref == 'refs/heads/master'
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_branch: report/benchmark
@@ -56,12 +56,7 @@ jobs:
       - name: Run benchmark
         run: |
           fileName=${{ matrix.target }}_output
-          ./benchmark.sh -a "--warmupIterations=1 --warmupTime=1 --measurementIterations=1 --measurementTime=1" ${{ matrix.target }}-client > $fileName.txt
-      - name: Generate md file
-        run:  |
-          fileName=${{ matrix.target }}_output
-          echo "\`\`\`java" >> $fileName.md &&
-          cat $fileName.txt >> $fileName.md && echo "\`\`\`" >> $fileName.md
+          ./benchmark.sh -a "--warmupIterations=1 --warmupTime=1 --measurementIterations=1 --measurementTime=1" -f $fileName.md ${{ matrix.target }}-client
       - name: Kill jobs
         run: jobs -p | grep -o -E '\s\d+\s' | xargs kill || true
       - name: Save output
