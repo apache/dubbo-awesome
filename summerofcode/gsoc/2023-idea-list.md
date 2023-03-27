@@ -4,7 +4,7 @@
 4. [Dubbo 精简 RPC API 抽象](https://github.com/apache/dubbo/issues/11902)
 5. [请求 JSON 格式兼容性检查](https://github.com/apache/dubbo/issues/11898)
 6. [Dubbo Client on WASM](https://github.com/apache/dubbo/issues/11901)
-7. [Dubbo 基于 WASM 实现](SPI 扩展 https://github.com/apache/dubbo/issues/11900)
+7. [Dubbo 基于 WASM 实现SPI 扩展](https://github.com/apache/dubbo/issues/11900)
 8. [自动化性能测试机制](https://github.com/apache/dubbo/issues/11899)
 9. [Dubbo API 管理平台](https://github.com/apache/dubbo/issues/11897)
 10. [Dubbo Service Deployer](https://github.com/apache/dubbo/issues/11896)
